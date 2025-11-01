@@ -6,9 +6,13 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    compileOnly "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
+    implementation "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION"
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.javassist:javassist:3.27.0-GA'
+    implementation 'commons-codec:commons-codec:1.10'
+    implementation 'com.google.guava:guava:28.1-jre'
+    implementation 'org.ow2.asm:asm:7.0'
+    implementation 'org.ow2.asm:asm-commons:7.0'
 }
 
 apply from: '../../gradle_mvn_push.gradle'

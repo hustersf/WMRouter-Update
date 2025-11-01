@@ -4,7 +4,6 @@ import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
 import com.android.build.gradle.internal.VariantManager
 import com.android.build.gradle.internal.scope.VariantScope
-import com.android.utils.appendCapitalized
 import com.google.common.base.CaseFormat
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin

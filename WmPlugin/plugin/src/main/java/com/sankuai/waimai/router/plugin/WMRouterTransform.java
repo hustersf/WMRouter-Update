@@ -1,6 +1,5 @@
 package com.sankuai.waimai.router.plugin;
 
-import com.android.SdkConstants;
 import com.android.build.api.transform.Format;
 import com.android.build.api.transform.QualifiedContent;
 import com.android.build.api.transform.Transform;
@@ -14,7 +13,7 @@ import com.kronos.plugin.base.DeleteCallBack;
 import com.kronos.plugin.base.TransformCallBack;
 import com.sankuai.waimai.router.plugin.visitor.ClassFilterVisitor;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -46,6 +45,8 @@ public class WMRouterTransform extends Transform {
 
     private static final String TRANSFORM = "Transform: ";
     private static final String GENERATE_INIT = "GenerateInit: ";
+
+    public static final String DOT_CLASS = ".class";
 
     /**
      * Linux/Unix： com/sankuai/waimai/router/generated/service
@@ -130,7 +131,7 @@ public class WMRouterTransform extends Transform {
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             String name = entry.getName();
-            if (name.endsWith(SdkConstants.DOT_CLASS) && name.startsWith(INIT_SERVICE_PATH)) {
+            if (name.endsWith(DOT_CLASS) && name.startsWith(INIT_SERVICE_PATH)) {
                 String className = trimName(name, 0).replace('/', '.');
                 initClasses.add(className);
                 WMRouterLogger.info("    find ServiceInitClass: %s", className);
@@ -145,7 +146,7 @@ public class WMRouterTransform extends Transform {
         File packageDir = new File(dir, INIT_SERVICE_DIR);
         if (packageDir.exists() && packageDir.isDirectory()) {
             Collection<File> files = FileUtils.listFiles(packageDir,
-                    new SuffixFileFilter(SdkConstants.DOT_CLASS, IOCase.INSENSITIVE), TrueFileFilter.INSTANCE);
+                    new SuffixFileFilter(DOT_CLASS, IOCase.INSENSITIVE), TrueFileFilter.INSTANCE);
             for (File f : files) {
                 String className = trimName(f.getAbsolutePath(), dir.getAbsolutePath().length() + 1)
                         .replace(File.separatorChar, '.');
@@ -160,7 +161,7 @@ public class WMRouterTransform extends Transform {
      * [prefix]com\xxx\aaa.class --> com\xxx\aaa
      */
     private String trimName(String s, int start) {
-        return s.substring(start, s.length() - SdkConstants.DOT_CLASS.length());
+        return s.substring(start, s.length() - DOT_CLASS.length());
     }
 
     /**
@@ -183,7 +184,7 @@ public class WMRouterTransform extends Transform {
             WMRouterLogger.info(GENERATE_INIT + "skipped, no service found");
             return;
         }
-        File dest = new File(directory, INIT_SERVICE_PATH + SdkConstants.DOT_CLASS);
+        File dest = new File(directory, INIT_SERVICE_PATH + DOT_CLASS);
         if (!dest.exists()) {
             try {
                 WMRouterLogger.info(GENERATE_INIT + "start...");

@@ -1,7 +1,7 @@
 package com.kronos.plugin.base;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

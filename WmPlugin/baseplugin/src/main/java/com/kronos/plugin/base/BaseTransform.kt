@@ -15,6 +15,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ForkJoinPool
+import com.google.common.collect.FluentIterable
 
 class BaseTransform(
     transformInvocation: TransformInvocation?,
@@ -150,7 +151,9 @@ class BaseTransform(
     private fun deleteDirectory(destFile: File, dest: File) {
         try {
             if (destFile.isDirectory) {
-                for (classFile in com.android.utils.FileUtils.getAllFiles(destFile)) {
+                var fileList = FluentIterable.from(Files.fileTraverser().depthFirstPreOrder(destFile))
+                    .filter(Files.isFile())
+                for (classFile in fileList) {
                     deleteSingle(classFile, dest)
                 }
             } else {
@@ -232,7 +235,9 @@ class BaseTransform(
     private fun changeFile(dir: File, dest: File) {
         if (dir.isDirectory) {
             FileUtils.copyDirectory(dir, dest)
-            for (classFile in com.android.utils.FileUtils.getAllFiles(dir)) {
+            var fileList = FluentIterable.from(Files.fileTraverser().depthFirstPreOrder(dir))
+                .filter(Files.isFile())
+            for (classFile in fileList) {
                 if (classFile.name.endsWith(".class")) {
                     val task = Callable<Void> {
                         val absolutePath = classFile.absolutePath.replace(
